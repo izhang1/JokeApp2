@@ -21,7 +21,7 @@ import java.io.IOException;
 import app.izhang.jokeactivity.JokeDisplay;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements BackendListener{
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,52 +53,54 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void tellJoke(View view) {
-        new EndpointsAsyncTask().execute(new Pair<Context, String>(this, "Manfred"));
-
-//        JokeProvider jokeProvider = new JokeProvider();
-
+        EndpointsAsyncTask asyncTask = new EndpointsAsyncTask();
+        asyncTask.attachListener(this);
+        asyncTask.execute();
     }
 
+    @Override
+    public void onBackendFinished(String jokeText) {
+        Intent intent = new Intent(this, JokeDisplay.class);
+        intent.putExtra(JokeDisplay.JOKE_KEY, jokeText);
+        startActivity(intent);
+    }
 }
 
-class EndpointsAsyncTask extends AsyncTask<Pair<Context, String>, Void, String> {
+class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
     private MyApi myApiService = null;
-    private Context context;
+    private BackendListener listener;
+
+    public void attachListener(BackendListener listener){
+        this.listener = listener;
+    }
 
     @Override
-    protected String doInBackground(Pair<Context, String>... params) {
+    protected String doInBackground(Void...voids) {
         if(myApiService == null) {  // Only do this once
             MyApi.Builder builder = new MyApi.Builder(AndroidHttp.newCompatibleTransport(),
                     new AndroidJsonFactory(), null)
-                    // options for running against local devappserver
-                    // - 10.0.2.2 is localhost's IP address in Android emulator
-                    // - turn off compression when running against local devappserver
                     .setRootUrl("http://10.0.2.2:8080/_ah/api/")
                     .setGoogleClientRequestInitializer(new GoogleClientRequestInitializer() {
-                        @Override
-                        public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
-                            abstractGoogleClientRequest.setDisableGZipContent(true);
-                        }
-                    });
-            // end options for devappserver
+            @Override
+            public void initialize(AbstractGoogleClientRequest<?> abstractGoogleClientRequest) throws IOException {
+                abstractGoogleClientRequest.setDisableGZipContent(true);
+            }
+        });
+    // end options for devappserver
 
-            myApiService = builder.build();
-        }
+    myApiService = builder.build();
+    }
 
-        context = params[0].first;
-        String name = params[0].second;
-
-        try {
-            return myApiService.sayHi(name).execute().getData();
-        } catch (IOException e) {
-            return e.getMessage();
-        }
+    try {
+        return myApiService.sayHi("1").execute().getData();
+    } catch (IOException e) {
+        return e.getMessage();
+    }
     }
 
     @Override
     protected void onPostExecute(String result) {
-        Intent intent = new Intent(context, JokeDisplay.class);
-        intent.putExtra(JokeDisplay.JOKE_KEY, result);
-        context.startActivity(intent);
+        super.onPostExecute(result);
+        listener.onBackendFinished(result);
     }
 }
