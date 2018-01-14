@@ -32,7 +32,6 @@ public class MyEndpoint {
         JokeProvider jokeProvider = new JokeProvider();
         Joke response = new Joke();
         response.setData(jokeProvider.getJoke());
-
         return response;
     }
 

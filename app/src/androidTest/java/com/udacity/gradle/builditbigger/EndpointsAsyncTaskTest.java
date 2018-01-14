@@ -30,7 +30,7 @@ public class EndpointsAsyncTaskTest {
             @Override
             protected void onPostExecute(String result) {
                 boolean isEmptyOrNull = TextUtils.isEmpty(result);
-                assert(!isEmptyOrNull);
+                assertFalse(isEmptyOrNull);
                 countDownLatch.countDown();
             }
         };
