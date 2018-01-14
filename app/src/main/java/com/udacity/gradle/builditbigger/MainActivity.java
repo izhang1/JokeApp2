@@ -86,13 +86,13 @@ class EndpointsAsyncTask extends AsyncTask<Void, Void, String> {
                 abstractGoogleClientRequest.setDisableGZipContent(true);
             }
         });
-    // end options for devappserver
+        // end options for devappserver
 
-    myApiService = builder.build();
+        myApiService = builder.build();
     }
 
     try {
-        return myApiService.sayHi("1").execute().getData();
+        return myApiService.sayHi().execute().getData();
     } catch (IOException e) {
         return e.getMessage();
     }

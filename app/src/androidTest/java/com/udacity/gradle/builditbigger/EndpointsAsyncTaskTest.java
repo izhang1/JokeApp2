@@ -43,6 +43,6 @@ public class EndpointsAsyncTaskTest {
         };
 
         runTask.run();
-        countDownLatch.await(30, TimeUnit.SECONDS);
+        countDownLatch.await(20, TimeUnit.SECONDS);
     }
 }

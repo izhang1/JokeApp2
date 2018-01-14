@@ -28,7 +28,7 @@ public class MyEndpoint {
 
     /** A simple endpoint method that takes a name and says Hi back */
     @ApiMethod(name = "sayHi")
-    public Joke sayHi(@Named("name") String name) {
+    public Joke sayHi() {
         JokeProvider jokeProvider = new JokeProvider();
         Joke response = new Joke();
         response.setData(jokeProvider.getJoke());
