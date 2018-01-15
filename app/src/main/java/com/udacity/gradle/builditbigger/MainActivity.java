@@ -9,6 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.google.api.client.extensions.android.http.AndroidHttp;
 import com.google.api.client.extensions.android.json.AndroidJsonFactory;
@@ -23,10 +25,14 @@ import app.izhang.jokeactivity.JokeDisplay;
 
 public class MainActivity extends AppCompatActivity implements BackendListener{
 
+    private ProgressBar progressBar;
+    private Button jokeBtn;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        progressBar = findViewById(R.id.progress_bar);
     }
 
 
@@ -53,6 +59,9 @@ public class MainActivity extends AppCompatActivity implements BackendListener{
     }
 
     public void tellJoke(View view) {
+        // Show progress bar
+        progressBar.setVisibility(View.VISIBLE);
+
         EndpointsAsyncTask asyncTask = new EndpointsAsyncTask();
         asyncTask.attachListener(this);
         asyncTask.execute();
@@ -60,6 +69,9 @@ public class MainActivity extends AppCompatActivity implements BackendListener{
 
     @Override
     public void onBackendFinished(String jokeText) {
+        // Hide progress bar
+        progressBar.setVisibility(View.INVISIBLE);
+
         Intent intent = new Intent(this, JokeDisplay.class);
         intent.putExtra(JokeDisplay.JOKE_KEY, jokeText);
         startActivity(intent);
