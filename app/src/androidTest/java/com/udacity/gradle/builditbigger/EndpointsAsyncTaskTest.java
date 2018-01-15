@@ -1,11 +1,8 @@
 package com.udacity.gradle.builditbigger;
 
-import android.content.Context;
-import android.support.v4.util.Pair;
 import android.text.TextUtils;
 
 import org.junit.Test;
-import org.w3c.dom.Text;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -17,7 +14,7 @@ import static org.junit.Assert.*;
  */
 public class EndpointsAsyncTaskTest {
 
-    CountDownLatch countDownLatch = new CountDownLatch(1);
+    private CountDownLatch countDownLatch = new CountDownLatch(1);
 
     @Test
     public void doInBackground() throws Exception {

@@ -10,8 +10,6 @@ import com.google.api.server.spi.config.Api;
 import com.google.api.server.spi.config.ApiMethod;
 import com.google.api.server.spi.config.ApiNamespace;
 
-import javax.inject.Named;
-
 import app.izhang.jokeprovider.JokeProvider;
 
 /** An endpoint class we are exposing */
@@ -26,7 +24,7 @@ import app.izhang.jokeprovider.JokeProvider;
 )
 public class MyEndpoint {
 
-    /** A simple endpoint method that takes a name and says Hi back */
+    /** Method that returns a joke from the Java library */
     @ApiMethod(name = "sayHi")
     public Joke sayHi() {
         JokeProvider jokeProvider = new JokeProvider();
